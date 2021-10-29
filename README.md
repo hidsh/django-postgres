@@ -20,6 +20,12 @@ https://docs.djangoproject.com/ja/3.2/intro/tutorial01/
 3.2.8
 ```
 
+### psycopg2 インストール
+
+```
+ pip install 'psycopg2-binary>=2.8,<2.9'
+```
+
 ### PostgreSQL インストール
 
 Heroku に合わせて 13 を入れる。以下参照。
@@ -43,18 +49,46 @@ DB `myapp` に接続できることを確認
 psql -U postgres -d myapp
 ```
 
-
 ### プロジェクト/アプリ作成
 ```
 django-admin startproject mysite <-- プロジェクト作成
 cd mysite                        <-- プロジェクトトップに移動(以後のコマンドは基本ここで実行)
-python manage.py startapp polls  <-- アプリ作成
+python manage.py startapp myapp  <-- アプリ作成
 ```
 
 ### 開発用サーバ起動
 ```
 python manage.py runserver
 ```
+
+### Django のDB設定を変更
+```
+vim mysite/setting.py
+```
+
+以下のように変更。
+```
+ DATABASES = {                                                                            'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',
+     }
+ }
+
+↓↓↓
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myapp',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+```
+
+
 
 ### アプリのビューを追加
 |ファイル|内容|メモ|
@@ -80,6 +114,7 @@ python manage.py runserver
 - pip 21.3.1
 - django 3.2.8 
 - PostgreSQL 13.4
+- psycopg2-binary-2.8.6
 
 ### heroku
 - 
