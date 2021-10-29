@@ -88,6 +88,11 @@ DATABASES = {
 }
 ```
 
+マイグレーションする。
+```
+python manage.py makemigrations
+python manage.py migrate
+```
 
 
 ### アプリのビューを追加
