@@ -1,6 +1,6 @@
 # django-postgres
 
-https://docs.djangoproject.com/ja/3.2/intro/tutorial01/
+https://qiita.com/shigechiyo/items/9b5a03ceead6e5ec87ec
 
 ## memo
 
