@@ -156,10 +156,10 @@ python manage.py migrate
 
 ## environment
 
-### local (macbook pro)
+### local (macbook pro / Big Sur 11.6.1)
 - python 3.9.7
 - pip 21.3.1
-- django 3.2.8 
+- django 3.2.9
 
 ### local (windows 10 / wsl2 / Ubuntu 20.04)
 - python 3.8.10
