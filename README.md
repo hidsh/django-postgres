@@ -23,26 +23,73 @@ https://qiita.com/shigechiyo/items/9b5a03ceead6e5ec87ec
 ### psycopg2 インストール
 
 ```
- pip install 'psycopg2-binary>=2.8,<2.9'
+(venv) ❯❯❯ pip install 'psycopg2-binary>=2.8,<2.9'
+(venv) ❯❯❯ pip list |grep psycopg2
+psycopg2-binary 2.8.6
 ```
 
 ### PostgreSQL インストール
 
-Heroku に合わせて 13 を入れる。以下参照。
+#### Heroku に合わせて 13 を入れる
+##### Ubuntu 20.04
 
 [How To Install PostgreSQL 13 on Ubuntu 20.04 | 18.04](https://computingforgeeks.com/how-to-install-postgresql-13-on-ubuntu/)
 
+##### Mac Big Sur
+```
+❯❯❯ brew install postgresql@13
+❯❯❯ echo 'export PATH="/usr/local/opt/postgresql@13/bin:$PATH"' >> ~/.zshrc
+❯❯❯ echo 'export LANNG=en_US.utf-8' >> ~/.zshrc
+❯❯❯ echo 'export LC_ALL=en_US.utf-8' >> ~/.zshrc
+❯❯❯ . ~/.zshrc
+❯❯❯ psql -V
+psql (PostgreSQL) 13.5
+❯❯❯ brew services start postgresql@13
+❯❯❯ brew services list|grep postgres
+postgresql@13     started root
+```
+
+### PostgreSQL のユーザ作成
+
+djangoから使うユーザ postgres を作成する。
+まず、そののまま入る。
+```
+❯❯❯ psql postgres
+postgres=# create user postgres SUPERUSER;
+```
+
+一旦抜けて postgresユーザで入り、個々のデータベース設定を確認する。
+```
+❯❯❯ psql -U postgres postgres
+\l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ postgres  | xxx      | UTF8     | C           | C           |
+ template0 | xxx      | UTF8     | C           | C           | =c/xxx               +
+           |          |          |             |             | g=CTc/xxx
+ template1 | xxx      | UTF8     | C           | C           | =c/xxx               +
+           |          |          |             |             | g=CTc/xxx
+```
+
+もし `template1` データベースの Collate と Ctype が上のように C になっている場合は新しく作るデータベースの日本語ソートがおかしくなるので、次のリンクのように `template1` を作り直しておく。→ https://yoshinorin.net/2018/06/12/postgresql-default-collate-ctype/
 
 ### PostgreSQL でアプリ用のDBを作成
 ```
 sudo -u postgres psql
  
-create database myapp
+create database myapp owner=postgres;
 alter role postgres set client_encoding to 'utf8';
 alter role postgres set default_transaction_isolation to 'read committed';
 alter role postgres set timezone to 'Asia/Tokyo';
 grant all privileges on database myapp to postgres;
- ```
+\l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
+-----------+----------+----------+-------------+-------------+-----------------------
+ myapp     | postgres | UTF8     | ja_JP.UTF-8 | ja_JP.UTF-8 | =Tc/postgres         +
+           |          |          |             |             | postgres=CTc/postgres
+```
 
 DB `myapp` に接続できることを確認
 ```
