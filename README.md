@@ -76,7 +76,7 @@ postgres=# create user postgres SUPERUSER;
 
 ### PostgreSQL でアプリ用のDBを作成
 ```
-sudo -u postgres psql
+psql -U postgres
  
 create database myapp owner=postgres;
 alter role postgres set client_encoding to 'utf8';
